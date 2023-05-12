@@ -41,7 +41,7 @@ function isMessageTypeVisible(messageType) {
                 case CONST.CHAT_MESSAGE_TYPES.EMOTE:
                     return true;
                 case CONST.CHAT_MESSAGE_TYPES.WHISPER:
-                    return game.settings.get("tabbed-chatlog", "icWhispers");
+                    return game.settings.get("cooler-tabbed-chatlog", "icWhispers");
                 case CONST.CHAT_MESSAGE_TYPES.ROLL:
                     return false;
             }
@@ -57,7 +57,7 @@ function isMessageTypeVisible(messageType) {
                 case CONST.CHAT_MESSAGE_TYPES.EMOTE:
                     return false;
                 case CONST.CHAT_MESSAGE_TYPES.WHISPER:
-                    return !game.settings.get("tabbed-chatlog", "icWhispers");
+                    return !game.settings.get("cooler-tabbed-chatlog", "icWhispers");
                 case CONST.CHAT_MESSAGE_TYPES.ROLL:
                     return false;
             }
@@ -74,7 +74,7 @@ function isMessageVisible(e) {
 
     if (!isMessageTypeVisible(messageType)) return false;
 
-    if (e.speaker.scene && game.settings.get("tabbed-chatlog", "perScene")) {
+    if (e.speaker.scene && game.settings.get("cooler-tabbed-chatlog", "perScene")) {
         if ((messageType == CONST.CHAT_MESSAGE_TYPES.IC || messageType == CONST.CHAT_MESSAGE_TYPES.EMOTE) && (e.data.speaker.scene != game.user.viewedScene)) return false;
     }
 
@@ -156,7 +156,7 @@ Hooks.on("renderChatMessage", (chatMessage, html, data) => {
     	|| data.message.type == CONST.CHAT_MESSAGE_TYPES.IC
 		|| data.message.type == CONST.CHAT_MESSAGE_TYPES.EMOTE
 		|| data.message.type == CONST.CHAT_MESSAGE_TYPES.ROLL) {
-        if (data.message.speaker.scene != undefined && game.settings.get("tabbed-chatlog", "perScene")) {
+        if (data.message.speaker.scene != undefined && game.settings.get("cooler-tabbed-chatlog", "perScene")) {
             html.addClass("scenespecific");
             html.addClass("scene" + data.message.speaker.scene);
             if (data.message.speaker.scene != game.user?.viewedScene) {
@@ -188,14 +188,14 @@ Hooks.on("renderChatMessage", (chatMessage, html, data) => {
     } else if (currentTab == "ic") {
         if ((data.message.type == CONST.CHAT_MESSAGE_TYPES.IC
     	  || data.message.type == CONST.CHAT_MESSAGE_TYPES.EMOTE
-		  || (data.message.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && game.settings.get("tabbed-chatlog", "icWhispers"))) && sceneMatches) {
+		  || (data.message.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && game.settings.get("cooler-tabbed-chatlog", "icWhispers"))) && sceneMatches) {
             html.css("display", "list-item");
         } else {
             html.css("cssText", "display: none !important;");
             html.addClass("hardHide");
         }
     } else if (currentTab == "ooc") {
-        if (data.message.type == CONST.CHAT_MESSAGE_TYPES.OOC || (data.message.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && !game.settings.get("tabbed-chatlog", "icWhispers"))) {
+        if (data.message.type == CONST.CHAT_MESSAGE_TYPES.OOC || (data.message.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && !game.settings.get("cooler-tabbed-chatlog", "icWhispers"))) {
             html.css("display", "list-item");
         } else {
             html.css("display", "none");
@@ -220,7 +220,7 @@ Hooks.on("createChatMessage", (chatMessage, content) => {
 
     if (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.OTHER) {
         if (currentTab != "rolls" && sceneMatches) {
-            if (game.settings.get("tabbed-chatlog", "autoNavigate")) {
+            if (game.settings.get("cooler-tabbed-chatlog", "autoNavigate")) {
                 window.game.tabbedchat.tabs.activate("rolls", {triggerCallback: true});
             }
             else {
@@ -230,7 +230,7 @@ Hooks.on("createChatMessage", (chatMessage, content) => {
         }
     } else if (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.ROLL) {
         if (currentTab != "rolls" && sceneMatches && chatMessage.whisper.length == 0) {
-            if (game.settings.get("tabbed-chatlog", "autoNavigate")) {
+            if (game.settings.get("cooler-tabbed-chatlog", "autoNavigate")) {
                 window.game.tabbedchat.tabs.activate("rolls", {triggerCallback: true});
             }
             else {
@@ -240,9 +240,9 @@ Hooks.on("createChatMessage", (chatMessage, content) => {
         }
     } else if (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.IC
             || chatMessage.type == CONST.CHAT_MESSAGE_TYPES.EMOTE
-            || (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && game.settings.get("tabbed-chatlog", "icWhispers"))) {
+            || (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && game.settings.get("cooler-tabbed-chatlog", "icWhispers"))) {
         if (currentTab != "ic" && sceneMatches) {
-            if (game.settings.get("tabbed-chatlog", "autoNavigate")) {
+            if (game.settings.get("cooler-tabbed-chatlog", "autoNavigate")) {
                 window.game.tabbedchat.tabs.activate("ic", {triggerCallback: true});
             }
             else {
@@ -251,10 +251,10 @@ Hooks.on("createChatMessage", (chatMessage, content) => {
             }
         }
     } else {
-        if (salonEnabled && chatMessage.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && !game.settings.get("tabbed-chatlog", "icWhispers")) return;
+        if (salonEnabled && chatMessage.type == CONST.CHAT_MESSAGE_TYPES.WHISPER && !game.settings.get("cooler-tabbed-chatlog", "icWhispers")) return;
 
         if (currentTab != "ooc") {
-            if (game.settings.get("tabbed-chatlog", "autoNavigate")) {
+            if (game.settings.get("cooler-tabbed-chatlog", "autoNavigate")) {
                 window.game.tabbedchat.tabs.activate("ooc", {triggerCallback: true});
             }
             else {
@@ -267,7 +267,7 @@ Hooks.on("createChatMessage", (chatMessage, content) => {
 
 Hooks.on("preCreateChatMessage", (chatMessage, content) => {
 
-    if (game.settings.get('tabbed-chatlog', 'icChatInOoc')) {
+    if (game.settings.get('cooler-tabbed-chatlog', 'icChatInOoc')) {
         if (currentTab == "ooc") {
             if (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.IC) {
                 chatMessage._source.type = CONST.CHAT_MESSAGE_TYPES.OOC;
@@ -286,10 +286,10 @@ Hooks.on("preCreateChatMessage", (chatMessage, content) => {
     } else if (chatMessage.type == CONST.CHAT_MESSAGE_TYPES.IC) {
         try {
             let scene = game.scenes.get(chatMessage.speaker.scene);
-            let webhook = scene.getFlag("tabbed-chatlog", "webhook");
+            let webhook = scene.getFlag("cooler-tabbed-chatlog", "webhook");
 
             if (webhook == undefined || webhook == "") {
-                webhook = game.settings.get("tabbed-chatlog", "icBackupWebhook");
+                webhook = game.settings.get("cooler-tabbed-chatlog", "icBackupWebhook");
             }
 
             if (webhook == undefined || webhook == "") {
@@ -330,7 +330,7 @@ Hooks.on("preCreateChatMessage", (chatMessage, content) => {
         }
     } else {
         try {
-            let webhook = game.settings.get("tabbed-chatlog", "oocWebhook");
+            let webhook = game.settings.get("cooler-tabbed-chatlog", "oocWebhook");
 
             if (webhook == undefined || webhook == "") {
                 return;
@@ -422,15 +422,15 @@ Hooks.on("renderSceneConfig", (app, html, data) => {
 
     if (app.object.compendium) return;
 
-    if (app.object.data.flags["tabbed-chatlog"]) {
-        if (app.object.data.flags["tabbed-chatlog"].webhook) {
-            loadedWebhookData = app.object.getFlag('tabbed-chatlog', 'webhook');
+    if (app.object.data.flags["cooler-tabbed-chatlog"]) {
+        if (app.object.data.flags["cooler-tabbed-chatlog"].webhook) {
+            loadedWebhookData = app.object.getFlag('cooler-tabbed-chatlog', 'webhook');
         } else {
-            app.object.setFlag('tabbed-chatlog', 'webhook', "");
+            app.object.setFlag('cooler-tabbed-chatlog', 'webhook', "");
             loadedWebhookData = "";
         }
     } else {
-        app.object.setFlag('tabbed-chatlog', 'webhook', "");
+        app.object.setFlag('cooler-tabbed-chatlog', 'webhook', "");
         loadedWebhookData = "";
     }
 
@@ -450,7 +450,7 @@ Hooks.on("renderSceneConfig", (app, html, data) => {
 Hooks.on("closeSceneConfig", (app, html, data) => {
     if (app.object.compendium) return;
 
-    app.object.setFlag('tabbed-chatlog', 'webhook', html.find("input[name ='scenewebhook']")[0].value);
+    app.object.setFlag('cooler-tabbed-chatlog', 'webhook', html.find("input[name ='scenewebhook']")[0].value);
 });
 
 
@@ -513,7 +513,7 @@ function setALLTabsNotifyProperties() {
 
 
 function shouldHideDueToStreamView() {
-    if (game.settings.get("tabbed-chatlog", "hideInStreamView")) {
+    if (game.settings.get("cooler-tabbed-chatlog", "hideInStreamView")) {
         if (window.location.href.endsWith("/stream")) {
             return true;
         }
@@ -538,7 +538,7 @@ Messages.prototype.flush =
 
 Hooks.on('init', () => {
 
-    game.settings.register('tabbed-chatlog', 'oocWebhook', {
+    game.settings.register('cooler-tabbed-chatlog', 'oocWebhook', {
         name: game.i18n.localize("TC.SETTINGS.OocWebhookName"),
         hint: game.i18n.localize("TC.SETTINGS.OocWebhookHint"),
         scope: 'world',
@@ -547,7 +547,7 @@ Hooks.on('init', () => {
         type: String,
     });
 
-    game.settings.register('tabbed-chatlog', 'icBackupWebhook', {
+    game.settings.register('cooler-tabbed-chatlog', 'icBackupWebhook', {
         name: game.i18n.localize("TC.SETTINGS.IcFallbackWebhookName"),
         hint: game.i18n.localize("TC.SETTINGS.IcFallbackWebhookHint"),
         scope: 'world',
@@ -556,7 +556,7 @@ Hooks.on('init', () => {
         type: String,
     });
 
-    game.settings.register('tabbed-chatlog', 'icChatInOoc', {
+    game.settings.register('cooler-tabbed-chatlog', 'icChatInOoc', {
         name: game.i18n.localize("TC.SETTINGS.IcChatInOocName"),
         hint: game.i18n.localize("TC.SETTINGS.IcChatInOocHint"),
         scope: 'world',
@@ -565,7 +565,7 @@ Hooks.on('init', () => {
         type: Boolean,
     });
 
-    game.settings.register('tabbed-chatlog', 'hideInStreamView', {
+    game.settings.register('cooler-tabbed-chatlog', 'hideInStreamView', {
         name: game.i18n.localize("TC.SETTINGS.HideInStreamViewName"),
         hint: game.i18n.localize("TC.SETTINGS.HideInStreamViewHint"),
         scope: 'world',
@@ -574,7 +574,7 @@ Hooks.on('init', () => {
         type: Boolean,
     });
 
-    game.settings.register('tabbed-chatlog', 'perScene', {
+    game.settings.register('cooler-tabbed-chatlog', 'perScene', {
         name: game.i18n.localize("TC.SETTINGS.PerSceneName"),
         hint: game.i18n.localize("TC.SETTINGS.PerSceneHint"),
         scope: 'world',
@@ -583,7 +583,7 @@ Hooks.on('init', () => {
         type: Boolean,
     });
 
-    game.settings.register('tabbed-chatlog', 'icWhispers', {
+    game.settings.register('cooler-tabbed-chatlog', 'icWhispers', {
         name: game.i18n.localize("TC.SETTINGS.IcWhispersName"),
         hint: game.i18n.localize("TC.SETTINGS.IcWhispersHint"),
         scope: 'world',
@@ -592,7 +592,7 @@ Hooks.on('init', () => {
         type: Boolean,
     });
 
-    game.settings.register('tabbed-chatlog', 'autoNavigate', {
+    game.settings.register('cooler-tabbed-chatlog', 'autoNavigate', {
         name: game.i18n.localize("TC.SETTINGS.AutoNavigateName"),
         hint: game.i18n.localize("TC.SETTINGS.AutoNavigateHint"),
         scope: 'client',
